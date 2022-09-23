@@ -30,6 +30,11 @@ setup(
     classifiers=[
         "License :: GNU Affero General Public License v3.0"
     ],
+    entry_points={
+        'console_scripts' : [
+          'rhotermpredict = rhotermpredict.algorithm:main',
+        ],
+    },
 
     # could also include long_description, download_url, etc.
 )
