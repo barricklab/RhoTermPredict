@@ -1,11 +1,4 @@
 from setuptools import setup, find_packages
-
-# Gets Dependencies
-with open('requirements.txt', 'r') as requirements_file:
-    requirements = []
-    for line in requirements_file:
-        requirements.append(line.strip())
-
 setup(
     name="rhotermpredict",
     version="3.0",
@@ -14,7 +7,7 @@ setup(
 
     # Project uses reStructuredText, so ensure that the docutils get
     # installed or upgraded on the target machine
-    install_requires=requirements,
+    install_requires=['numpy >= 1.15.4', 'Bio >= 0.1.0'],
 
     # metadata to display on PyPI
     author="Cameron Roots",
@@ -28,7 +21,7 @@ setup(
     },
     include_package_data=True,
     classifiers=[
-        "License :: GNU Affero General Public License v3.0"
+        "License :: OSI Approved :: GNU Affero General Public License v3"
     ],
     entry_points={
         'console_scripts' : [
