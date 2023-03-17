@@ -204,6 +204,7 @@ def rho_term_predict(inseq = None, csv_out = None, text_out = None, quiet = True
                                 score += 1
                             cod += 1
                             final_score, palindromes = palindrome_finder(s, gc_whole_genome, 1, score, calc="yes")
+                            final_score = float(final_score)
                             pause_consensus = []
                             while True:
                                 if re.search(pattern_pause_site1, s):
@@ -221,13 +222,13 @@ def rho_term_predict(inseq = None, csv_out = None, text_out = None, quiet = True
                             scores.append(final_score)
                             prediction = RhoTermPredictResult(strand = "+",
                                                                 c_over_g = c_over_g,
-                                                                start_rut=pos1,
-                                                                end_rut=pos2,
+                                                                start_rut=int(pos1),
+                                                                end_rut=int(pos2),
                                                                 term_seq = w,
                                                                 downstream_seq=s,
                                                                 palindromes=palindromes,
                                                                 pause_concensus=pause_consensus,
-                                                                scores = [palindrome[3] for palindrome in palindromes])
+                                                                scores = [float(palindrome[3]) for palindrome in palindromes])
                             final_list.append(prediction)
 
         # negative strand
@@ -291,6 +292,7 @@ def rho_term_predict(inseq = None, csv_out = None, text_out = None, quiet = True
                                 score += 1
                             cod += 1
                             final_score, palindromes = palindrome_finder(s, gc_whole_genome, -1, score, calc="yes")
+                            final_score = float(final_score)
                             start = 0
                             pause_consensus = []
                             while True:
@@ -309,18 +311,18 @@ def rho_term_predict(inseq = None, csv_out = None, text_out = None, quiet = True
                                 final_score = score + 3
                             prediction = RhoTermPredictResult(strand = "-",
                                                                 c_over_g = c_over_g,
-                                                                start_rut=pos1,
-                                                                end_rut=pos2,
+                                                                start_rut=int(pos1),
+                                                                end_rut=int(pos2),
                                                                 term_seq=w,
                                                                 downstream_seq=s,
                                                                 palindromes=palindromes,
                                                                 pause_concensus=pause_consensus,
-                                                                scores = [palindrome[3] for palindrome in palindromes])
+                                                                scores = [float(palindrome[3]) for palindrome in palindromes])
                             final_list.append(prediction)
                             scores.append(final_score)
         if csv_out or text_out:
             _write_output(final_list, csv_out, text_out)
-        else:
+        elif not quiet:
             _print_results(final_list)
 
     if not quiet:
@@ -343,6 +345,7 @@ def _write_output(final_list, csv_file = None, text_file = None):
     def _writer_handeler(csv_filestream, text_filestream):
         csv_filestream.writerow(['region', 'start_rut', 'end_rut', 'cg_ratio', 'strand', 'score_sum'])
         text_filestream.write("Sequences of predicted Rho-dependent terminators\n")
+        predictions=0
         for i, terminator in enumerate(final_list):
             x1 = terminator.start_rut
             x2 = terminator.end_rut
@@ -530,6 +533,7 @@ def main():
         input_sequence = [cli_args['input']]
     assert input_sequence is not None  # Programming check. Open issue if this happens.
     rhotermpredict_results = rho_term_predict(input_sequence, cli_args['output'], cli_args['quiet'])
+    return rhotermpredict_results
 
 
 def parse_fasta(filepath):
