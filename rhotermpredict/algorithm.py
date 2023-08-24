@@ -9,7 +9,6 @@ from dataclasses import dataclass
 from Bio import SeqIO
 from Bio.Seq import Seq
 from pathlib import Path
-import rich
 
 
 @dataclass
