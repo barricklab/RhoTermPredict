@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from Bio import SeqIO
 from Bio.Seq import Seq
 from pathlib import Path
+import rich
 
 
 @dataclass
@@ -21,7 +22,7 @@ class RhoTermPredictResult:
     downstream_seq: str
     palindromes: list
     pause_concensus: list
-    scores: list
+    score: float
 
     def score_sum(self):
         return sum(self.scores)
@@ -149,6 +150,7 @@ def rho_term_predict(inseq = None, csv_out = None, text_out = None, quiet = True
         for j in range(len(genome)):
             x1 = scale + j
             x2 = scale + j + 78
+            prediction = None
             if x2 > len(genome):
                 break
             else:
@@ -228,7 +230,7 @@ def rho_term_predict(inseq = None, csv_out = None, text_out = None, quiet = True
                                                                 downstream_seq=s,
                                                                 palindromes=palindromes,
                                                                 pause_concensus=pause_consensus,
-                                                                scores = [float(palindrome[3]) for palindrome in palindromes])
+                                                                score = final_score)
                             final_list.append(prediction)
 
         # negative strand
@@ -301,6 +303,7 @@ def rho_term_predict(inseq = None, csv_out = None, text_out = None, quiet = True
                                     positions = research.span()
                                     x2 = positions[0]
                                     y2 = positions[1]
+                                    found_PC = [x2, y2]
                                     s = s[y2:]
                                     x2 += start
                                     y2 += start
@@ -317,7 +320,7 @@ def rho_term_predict(inseq = None, csv_out = None, text_out = None, quiet = True
                                                                 downstream_seq=s,
                                                                 palindromes=palindromes,
                                                                 pause_concensus=pause_consensus,
-                                                                scores = [float(palindrome[3]) for palindrome in palindromes])
+                                                                score = final_score)
                             final_list.append(prediction)
                             scores.append(final_score)
         if csv_out or text_out:
@@ -352,7 +355,7 @@ def _write_output(final_list, csv_file = None, text_file = None):
             w = terminator.term_seq
             s = terminator.downstream_seq
             c_over_g = terminator.c_over_g
-            scores = terminator.scores
+            scores = [float(palindrome[3]) for palindrome in terminator.palindromes]
             strand = terminator.strand
 
             text_filestream.write(f"\n\n\nPREDICTED REGION NUMBER T{i} (STRAND {strand})")
@@ -405,7 +408,7 @@ def _print_results(final_list):
         w = terminator.term_seq
         s = terminator.downstream_seq
         c_over_g = terminator.c_over_g
-        scores = terminator.scores
+        scores = [float(palindrome[3]) for palindrome in terminator.palindromes]
         strand = terminator.strand
 
         print(f"\n\n\nPREDICTED REGION NUMBER T{i} (STRAND {strand})")
