@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from Bio import SeqIO
 from Bio.Seq import Seq
 from pathlib import Path
+import rich
 
 
 @dataclass
@@ -231,6 +232,10 @@ def rho_term_predict(inseq = None, csv_out = None, text_out = None, quiet = True
                                                                 pause_concensus=pause_consensus,
                                                                 score = final_score)
                             final_list.append(prediction)
+                if prediction:
+                    print('/n')
+                    rich.print(prediction)
+                    print('/n')
 
         # negative strand
         
