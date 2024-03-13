@@ -25,5 +25,6 @@ setup(
             "rhotermpredict = rhotermpredict.algorithm:main",
         ],
     },
+    long_description = open("README.md").read(),
     # could also include long_description, download_url, etc.
 )
