@@ -3,6 +3,7 @@ from setuptools import setup
 setup(
     name="rhotermpredict",
     version="3.4",
+    python_requires='>=3.10',
     packages=["rhotermpredict"],
     package_dir={"rhotermpredict": "rhotermpredict"},
     # Project uses reStructuredText, so ensure that the docutils get
